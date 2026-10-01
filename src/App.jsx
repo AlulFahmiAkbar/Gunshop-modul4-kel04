@@ -4,14 +4,38 @@ import Footer from './components/Footer.jsx'
 import Catalog from './pages/Catalog.jsx'
 import About from './pages/About.jsx'
 import Contact from './pages/Contact.jsx'
+import Cart from './pages/Cart.jsx'
 import './App.css'
 
 function App() {
   const [tab, setTab] = useState('Catalog')
+  const [cart, setCart] = useState([])
 
   // State untuk menyimpan event instalasi PWA
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isInstallable, setIsInstallable] = useState(false)
+
+  const addToCart = (gun) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.gun.name === gun.name)
+      if (existing) {
+        return prev.map(item => item.gun.name === gun.name ? { ...item, quantity: item.quantity + 1 } : item)
+      }
+      return [...prev, { gun, quantity: 1 }]
+    })
+  }
+
+  const updateQuantity = (gunName, quantity) => {
+    if (quantity < 1) {
+      removeFromCart(gunName)
+      return
+    }
+    setCart(prev => prev.map(item => item.gun.name === gunName ? { ...item, quantity } : item))
+  }
+
+  const removeFromCart = (gunName) => {
+    setCart(prev => prev.filter(item => item.gun.name !== gunName))
+  }
 
   useEffect(() => {
     // Fungsi untuk menangkap event dari browser
@@ -62,11 +86,12 @@ function App() {
         </div>
       )}
 
-      <Header tab={tab} onTab={setTab} />
+      <Header tab={tab} onTab={setTab} cartCount={cart.reduce((sum, item) => sum + item.quantity, 0)} />
       <main className="main">
-        {tab === 'Catalog' && <Catalog />}
+        {tab === 'Catalog' && <Catalog onAddToCart={addToCart} />}
         {tab === 'About' && <About />}
         {tab === 'Contact' && <Contact />}
+        {tab === 'Cart' && <Cart cart={cart} onUpdateQuantity={updateQuantity} onRemove={removeFromCart} />}
       </main>
       <Footer />
     </div>

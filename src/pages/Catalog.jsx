@@ -2,10 +2,20 @@ import { useState } from 'react'
 import GUNS from '../data/guns.js'
 import GunCard from '../components/GunCard.jsx'
 
-function Catalog() {
+function Catalog({ onAddToCart }) {
     const [searchQuery, setSearchQuery] = useState('')
     const [filterType, setFilterType] = useState('All')
-    const [sortOption, setSortOption] = useState('name-asc')
+    const [sortBy, setSortBy] = useState('name')
+    const [sortOrder, setSortOrder] = useState('asc')
+
+    const toggleSort = (type) => {
+        if (sortBy === type) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+        } else {
+            setSortBy(type)
+            setSortOrder('asc')
+        }
+    }
 
     let processedGuns = GUNS.filter((gun) => {
         const matchesSearch = gun.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -14,11 +24,13 @@ function Catalog() {
     })
 
     processedGuns.sort((a, b) => {
-        if (sortOption === 'name-asc') return a.name.localeCompare(b.name)
-        if (sortOption === 'name-desc') return b.name.localeCompare(a.name)
-        if (sortOption === 'price-asc') return a.price - b.price
-        if (sortOption === 'price-desc') return b.price - a.price
-        return 0
+        let result = 0
+        if (sortBy === 'name') {
+            result = a.name.localeCompare(b.name)
+        } else if (sortBy === 'price') {
+            result = a.price - b.price
+        }
+        return sortOrder === 'asc' ? result : -result
     })
 
     return (
@@ -54,16 +66,20 @@ function Catalog() {
                         <option value="Heavy">Heavy</option>
                     </select>
 
-                    <select
-                        value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
-                        style={{ padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px' }}
-                    >
-                        <option value="name-asc">Name (A Z)</option>
-                        <option value="name-desc">Name (Z A)</option>
-                        <option value="price-asc">Price (Low to High)</option>
-                        <option value="price-desc">Price (High to Low)</option>
-                    </select>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <button 
+                            onClick={() => toggleSort('name')}
+                            style={{ padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px', background: sortBy === 'name' ? 'var(--brass)' : '#fff', color: sortBy === 'name' ? '#fff' : 'inherit', cursor: 'pointer' }}
+                        >
+                            Sort by Name {sortBy === 'name' && (sortOrder === 'asc' ? '↑' : '↓')}
+                        </button>
+                        <button 
+                            onClick={() => toggleSort('price')}
+                            style={{ padding: '8px 12px', border: '1px solid var(--line)', borderRadius: '4px', background: sortBy === 'price' ? 'var(--brass)' : '#fff', color: sortBy === 'price' ? '#fff' : 'inherit', cursor: 'pointer' }}
+                        >
+                            Sort by Price {sortBy === 'price' && (sortOrder === 'asc' ? '↑' : '↓')}
+                        </button>
+                    </div>
                 </div>
 
                 <div className="list-head">
@@ -73,7 +89,7 @@ function Catalog() {
 
                 {processedGuns.length > 0 ? (
                     <ul className="stock">
-                        {processedGuns.map((gun) => <GunCard key={gun.name} gun={gun} />)}
+                        {processedGuns.map((gun) => <GunCard key={gun.name} gun={gun} onAddToCart={() => onAddToCart(gun)} />)}
                     </ul>
                 ) : (
                     <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--steel)', fontSize: '1.2rem', fontWeight: '500' }}>

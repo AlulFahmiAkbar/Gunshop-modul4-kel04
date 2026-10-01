@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-function GunCard({ gun }) {
+function GunCard({ gun, onAddToCart }) {
     const popup = useRef(null)
 
     return (
@@ -13,6 +13,14 @@ function GunCard({ gun }) {
                 </span>
                 <span className="price">${gun.price.toLocaleString()}</span>
             </button>
+            <div style={{ padding: '0 14px 14px', border: '1px solid var(--line)', borderTop: 'none', background: '#fff' }}>
+                <button 
+                    onClick={onAddToCart}
+                    style={{ width: '100%', padding: '8px', background: 'var(--brass)', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                    Add to Cart
+                </button>
+            </div>
 
             <dialog
                 className="popup"
@@ -25,8 +33,19 @@ function GunCard({ gun }) {
                     {gun.type} · {gun.caliber} · <span className="price">${gun.price.toLocaleString()}</span>
                 </p>
                 <p>{gun.description}</p>
-                <form method="dialog">
+                <form method="dialog" style={{ display: 'flex', gap: '12px' }}>
                     <button className="popup-close">Close</button>
+                    <button 
+                        type="button"
+                        onClick={() => {
+                            onAddToCart();
+                            popup.current.close();
+                        }}
+                        className="popup-close"
+                        style={{ background: 'var(--brass)', color: '#fff', borderColor: 'var(--brass)' }}
+                    >
+                        Add to Cart
+                    </button>
                 </form>
             </dialog>
         </li>
