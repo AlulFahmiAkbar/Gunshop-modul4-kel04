@@ -54,7 +54,7 @@ const GUNS = [
             'The other pump gun. Twin action bars, a simple safety on the tang, and a price that leaves money for ammunition.',
     },
     {
-        name: 'SCAR-L (FF)',
+        name: 'SCAR-L',
         type: 'Rifle',
         caliber: '5.56mm',
         price: 850,
@@ -84,6 +84,30 @@ const GUNS = [
         price: 45,
         image: '/guns/granat.jpg',
         description: 'Standard issue fragmentation hand grenade. Sangat efektif untuk membersihkan ruangan atau bunker dengan radius ledakan mematikan.',
+    },
+    {
+        name: 'RPG-7',
+        type: 'Heavy',
+        caliber: '85mm',
+        price: 2500,
+        image: '/guns/Rocket Launcher.jpg',
+        description: 'Portable, unguided, shoulder-launched anti-tank rocket-propelled grenade launcher. Sangat efektif untuk menghancurkan kendaraan lapis baja.',
+    },
+    {
+        name: 'M84 Stun Grenade',
+        type: 'Explosive',
+        caliber: 'N/A',
+        price: 60,
+        image: '/guns/Flashbang.jpg',
+        description: 'Flashbang standar militer. Menghasilkan kilatan cahaya yang membutakan dan suara memekakkan telinga untuk melumpuhkan musuh sementara.',
+    },
+    {
+        name: 'Molotov Cocktail',
+        type: 'Explosive',
+        caliber: 'N/A',
+        price: 15,
+        image: '/guns/Bom Molotov.jpg',
+        description: 'Senjata pembakar rakitan (improvised incendiary weapon). Pecah saat benturan dan menyebarkan cairan yang terbakar ke area target.',
     }
 ]
 
